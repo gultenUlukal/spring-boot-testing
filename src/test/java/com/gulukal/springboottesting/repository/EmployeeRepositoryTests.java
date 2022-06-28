@@ -3,6 +3,7 @@ package com.gulukal.springboottesting.repository;
 
 import com.gulukal.springboottesting.model.Employee;
 //create static import -->
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -87,7 +88,7 @@ public class EmployeeRepositoryTests {
 
         // when - action or behavior that are going to test
         // get() for optional return
-        Employee employeeDB = employeeRepository.findById(employee.getId()).get();
+        Employee employeeDB = employeeRepository.findById(employee.getId()).orElseThrow();
 
         // then - verify the output
         assertThat(employeeDB).isNotNull();
@@ -107,14 +108,36 @@ public class EmployeeRepositoryTests {
         employeeRepository.save(employee);
 
         // when - action or behavior that are going to test
-        // get() for optional return
-        Employee employeeByEmail = employeeRepository.findByEmail(employee.getEmail()).get();
+        // orElseThrow() for optional return
+        Employee employeeByEmail = employeeRepository.findByEmail(employee.getEmail()).orElseThrow();
 
         // then - verify the output
         assertThat(employeeByEmail).isNotNull();
 
     }
 
+    //JUnit test for update employee operation
+    @DisplayName("JUnit test for update employee operation ")
+    @Test
+    public void givenEmployeeObject_whenUpdateEmployee_thenReturnUpdatedEmployee() {
+        // given - precondition or setup
+        Employee employee = Employee.builder()
+                .firstName("Gulten")
+                .lastName("Ulukal")
+                .email("gulten.ulukal@gmail.com")
+                .build();
+        employeeRepository.save(employee);
 
+        // when - action or behavior that are going to test
+        Employee savedEmployee = employeeRepository.findById(employee.getId()).orElseThrow();
+        savedEmployee.setEmail("basak.ulukal@gmail.com");
+        savedEmployee.setFirstName("Basak");
+        Employee updatedEmployee = employeeRepository.save(savedEmployee);
+
+        // then - verify the output
+        assertThat(updatedEmployee.getEmail()).isEqualTo("basak.ulukal@gmail.com");
+        assertThat(updatedEmployee.getFirstName()).isEqualTo("Basak");
+
+    }
 
     }
