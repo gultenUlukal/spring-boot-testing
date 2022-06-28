@@ -3,7 +3,6 @@ package com.gulukal.springboottesting.repository;
 
 import com.gulukal.springboottesting.model.Employee;
 //create static import -->
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 //transaction and rollback
 @DataJpaTest
@@ -138,6 +138,27 @@ public class EmployeeRepositoryTests {
         // then - verify the output
         assertThat(updatedEmployee.getEmail()).isEqualTo("basak.ulukal@gmail.com");
         assertThat(updatedEmployee.getFirstName()).isEqualTo("Basak");
+
+    }
+
+    //JUnit test for delete employee operation
+    @DisplayName("JUnit test for delete employee operation")
+    @Test
+    public void givenEmployeeObject_whenDelete_thenReturnRemovedEmployeeObject() {
+        // given - precondition or setup
+        Employee employee = Employee.builder()
+                .firstName("Gulten")
+                .lastName("Ulukal")
+                .email("gulten.ulukal@gmail.com")
+                .build();
+        employeeRepository.save(employee);
+
+        // when - action or behavior that are going to test
+        employeeRepository.delete(employee);
+        Optional<Employee> employeeOptional = employeeRepository.findById(employee.getId());
+
+        // then - verify the output
+        assertThat(employeeOptional).isEmpty();
 
     }
 
