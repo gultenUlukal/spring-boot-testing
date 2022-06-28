@@ -87,7 +87,7 @@ public class EmployeeRepositoryTests {
         employeeRepository.save(employee);
 
         // when - action or behavior that are going to test
-        // get() for optional return
+        // orElseThrow() --> for optional return
         Employee employeeDB = employeeRepository.findById(employee.getId()).orElseThrow();
 
         // then - verify the output
@@ -108,7 +108,7 @@ public class EmployeeRepositoryTests {
         employeeRepository.save(employee);
 
         // when - action or behavior that are going to test
-        // orElseThrow() for optional return
+        // orElseThrow() --> for optional return
         Employee employeeByEmail = employeeRepository.findByEmail(employee.getEmail()).orElseThrow();
 
         // then - verify the output
@@ -129,6 +129,7 @@ public class EmployeeRepositoryTests {
         employeeRepository.save(employee);
 
         // when - action or behavior that are going to test
+        // orElseThrow() --> for optional return
         Employee savedEmployee = employeeRepository.findById(employee.getId()).orElseThrow();
         savedEmployee.setEmail("basak.ulukal@gmail.com");
         savedEmployee.setFirstName("Basak");
