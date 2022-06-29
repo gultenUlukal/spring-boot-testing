@@ -2,10 +2,6 @@ package com.gulukal.springboottesting.repository;
 
 
 import com.gulukal.springboottesting.model.Employee;
-//create static import -->
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 //transaction and rollback
 @DataJpaTest
@@ -167,7 +165,7 @@ public class EmployeeRepositoryTests {
     //JUnit test for custom query JPQL with index
     @DisplayName("JUnit test for custom query JPQL with index")
     @Test
-    public void givenFirstNameAndLastName_whenFindByJql_thenReturnEmployeeObject() {
+    public void givenFirstNameAndLastName_whenFindByJPQLNamedIndex_thenReturnEmployeeObject() {
         // given - precondition or setup
         Employee employee = Employee.builder()
                 .firstName("Gulten")
@@ -179,7 +177,29 @@ public class EmployeeRepositoryTests {
         String lastName = "Ulukal";
 
         // when - action or behavior that are going to test
-        Employee savedEmployee = employeeRepository.findByJPQL(firstName,lastName);
+        Employee savedEmployee = employeeRepository.findByJPQLIndexParams(firstName,lastName);
+
+        // then - verify the output
+        assertThat(savedEmployee).isNotNull();
+
+    }
+
+    //JUnit test for custom query JPQL with param
+    @DisplayName("JUnit test for custom query JPQL with param")
+    @Test
+    public void givenFirstNameAndLastName_whenFindByJPQLNamedParams_thenReturnEmployeeObject() {
+        // given - precondition or setup
+        Employee employee = Employee.builder()
+                .firstName("Gulten")
+                .lastName("Ulukal")
+                .email("gulten.ulukal@gmail.com")
+                .build();
+        employeeRepository.save(employee);
+        String firstName = "Gulten";
+        String lastName = "Ulukal";
+
+        // when - action or behavior that are going to test
+        Employee savedEmployee = employeeRepository.findByJPQLNamedParams(firstName,lastName);
 
         // then - verify the output
         assertThat(savedEmployee).isNotNull();
