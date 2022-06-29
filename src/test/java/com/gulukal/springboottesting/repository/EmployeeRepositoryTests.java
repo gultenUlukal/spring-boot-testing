@@ -4,6 +4,8 @@ package com.gulukal.springboottesting.repository;
 import com.gulukal.springboottesting.model.Employee;
 //create static import -->
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,6 +161,29 @@ public class EmployeeRepositoryTests {
 
         // then - verify the output
         assertThat(employeeOptional).isEmpty();
+
+    }
+
+    //JUnit test for custom query JPQL with index
+    @DisplayName("JUnit test for custom query JPQL with index")
+    @Test
+    public void givenFirstNameAndLastName_whenFindByJql_thenReturnEmployeeObject() {
+        // given - precondition or setup
+        Employee employee = Employee.builder()
+                .firstName("Gulten")
+                .lastName("Ulukal")
+                .email("gulten.ulukal@gmail.com")
+                .build();
+        employeeRepository.save(employee);
+        String firstName = "Gulten";
+        String lastName = "Ulukal";
+
+        // when - action or behavior that are going to test
+        Employee savedEmployee = employeeRepository.findByJPQL(firstName,lastName);
+
+        // then - verify the output
+        assertThat(savedEmployee).isNotNull();
+
 
     }
 
