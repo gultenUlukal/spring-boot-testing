@@ -6,6 +6,7 @@ import com.gulukal.springboottesting.repository.EmployeeRepository;
 import com.gulukal.springboottesting.service.EmployeeService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,5 +27,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new ResourceNorFoundException("Employee already exist with given email:" + employee.getEmail());
         }
         return employeeRepository.save(employee);
+    }
+
+    @Override
+    public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll();
     }
 }
