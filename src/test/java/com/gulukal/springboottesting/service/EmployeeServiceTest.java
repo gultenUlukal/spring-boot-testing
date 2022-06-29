@@ -1,6 +1,7 @@
 package com.gulukal.springboottesting.service;
 
 
+import com.gulukal.springboottesting.exception.ResourceNorFoundException;
 import com.gulukal.springboottesting.model.Employee;
 import com.gulukal.springboottesting.repository.EmployeeRepository;
 import com.gulukal.springboottesting.service.impl.EmployeeServiceImpl;
@@ -15,7 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
@@ -30,7 +33,7 @@ public class EmployeeServiceTest {
     @BeforeEach
     public void setup() {
 
-        employee = Employee.builder()
+       employee = Employee.builder()
                 .firstName("Gulten")
                 .lastName("Ulukal")
                 .email("gulten.ulukal@gmail.com")
@@ -51,6 +54,21 @@ public class EmployeeServiceTest {
 
         // then - verify the output
         assertThat(savedEmployee).isNotNull();
+    }
 
+    //JUnit test for saveEmployee method which throws exception
+    @DisplayName("JUnit test for saveEmployee method which throws exception")
+    @Test
+    public void givenExistingEmail_whenSaveEmployee_thenThrowsException() {
+        // given - precondition or setup
+        given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.of(employee));
+
+        // when -  action or the behaviour that we are going test
+        assertThrows(ResourceNorFoundException.class, () -> {
+            employeeService.saveEmployee(employee);
+        });
+
+        // then - verify the output
+        verify(employeeRepository, never()).save(any(Employee.class));
     }
 }
